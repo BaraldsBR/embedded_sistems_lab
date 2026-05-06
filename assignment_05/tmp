@@ -1,0 +1,16 @@
+sudo apt-get install libgstreamer1.0-dev gstreamer1.0-plugins-good gstreamer1.0-tools
+
+
+
+gst-launch-1.0 -v -e v4l2src device=/dev/video0 ! fakesink
+
+gst-launch-1.0 -v -e v4l2src device=/dev/video0 ! jpegenc ! image/jpeg,width=640,height=480,framerate=30/1 ! fakesink
+
+gst-launch-1.0 -v -e v4l2src device=/dev/video0 ! jpegenc ! image/jpeg,width=640,height=480,framerate=30/1 ! avimux ! filesink location=file.avi
+
+gst-launch-1.0 -v -e v4l2src device=/dev/video0 ! jpegenc ! image/jpeg,width=640,height=480,framerate=30/1 ! jpegdec ! filesink location=file.yuv
+
+
+/Applications/_downloaded/VLC.app/Contents/MacOS/VLC --rawvid-fps 30 --rawvid-width 640 --rawvid-height 480 --rawvid-chroma I420 file.yuv
+
+gcc -Wall main.c -o main $(pkg-config --cflags --libs gstreamer-1.0)
