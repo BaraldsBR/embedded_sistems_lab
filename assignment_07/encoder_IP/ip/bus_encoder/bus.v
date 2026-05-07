@@ -1,7 +1,7 @@
 `timescale 1 ps / 1 ps
 module bus #(
 		parameter LED_WIDTH = 8,
-        parameter DATA_WIDTH = 32
+        parameter DATA_WIDTH = 32,
         parameter POS_WIDTH = 16
 	) (
 		input  wire [7:0]  slave_address,     //      avs_s0.address
