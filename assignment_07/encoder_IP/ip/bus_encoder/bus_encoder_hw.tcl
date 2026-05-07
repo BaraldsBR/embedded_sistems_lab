@@ -73,7 +73,7 @@ set_parameter_property LED_WIDTH ALLOWED_RANGES {1 2 4 8}
 add_parameter POS_WIDTH int 16 "Output width"
 set_parameter_property POS_WIDTH DISPLAY_NAME "Output width"
 set_parameter_property POS_WIDTH GROUP "Register File Properties"
-set_parameter_property POS_WIDTH AFFECTS_PORT_WIDTHS false
+set_parameter_property POS_WIDTH AFFECTS_PORT_WIDTHS true
 set_parameter_property POS_WIDTH ALLOWED_RANGES {8 16}
 
 ## 
