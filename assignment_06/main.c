@@ -2,20 +2,41 @@
 #include <glib.h>
 #include <stdio.h>
 
+#ifdef __APPLE__
+#include <TargetConditionals.h>
+#endif
+
 
 static GstFlowReturn new_sample (GstElement *sink) {
   GstSample *sample;
+  GstBuffer *buffer;
+  u_int8_t dest[192];
+
 
   /* Retrieve the buffer */
   g_signal_emit_by_name (sink, "pull-sample", &sample);
 
-  GstBuffer *buffer;
+
 
   if (sample) {
     buffer = gst_sample_get_buffer (sample);
     // g_print ("*");
-    
-    printf("%ld \n", gst_buffer_get_size(buffer));
+
+    size_t size = 192;
+    gst_buffer_extract(buffer, 0, (void*)dest, size);
+
+    /* print just Y' */
+    for (size_t row = 0; row < 12; row++)
+    {
+      for (size_t col = 0; col < 16; col++)
+      {
+        printf("%3hhu ", dest[row*16 + col]);
+      }
+      printf("\n");
+    }
+
+    printf("\n");
+    // printf("%ld \n", gst_buffer_get_size(buffer));
 
     gst_sample_unref (sample);
     return GST_FLOW_OK;
@@ -59,13 +80,13 @@ bus_call (GstBus     *bus,
 }
 
 
-int main (int   argc,
+int main_main (int   argc,
       char *argv[])
 {
   GMainLoop *loop;
 
-  GstElement *pipeline, *source, *encoder, *decoder, *sink;
-  GstCaps *caps;
+  GstElement *pipeline, *source, *encoder, *decoder, *sink, *videoscale;
+  GstCaps *caps, *videoscalecaps;
   GstBus *bus;
   guint bus_watch_id;
 
@@ -85,6 +106,7 @@ int main (int   argc,
   source     = gst_element_factory_make ("autovideosrc",  "webcam-source");
   encoder    = gst_element_factory_make ("jpegenc",       "jpeg-encoder");
   decoder    = gst_element_factory_make ("jpegdec",       "jpeg-decoder");
+  videoscale = gst_element_factory_make ("videoscale",    "video-scale");
   sink       = gst_element_factory_make ("appsink",       "app-sink");
 
   if (!pipeline || !source || !encoder || !decoder || !sink) {
@@ -111,16 +133,23 @@ int main (int   argc,
                               "framerate", GST_TYPE_FRACTION, 15, 1,
                               NULL);
 
+  videoscalecaps = gst_caps_new_simple ("video/x-raw",
+                              "width", G_TYPE_INT, 16,
+                              "height", G_TYPE_INT, 12,
+                              NULL);
+
   /* we add all elements into the pipeline */
   /* file-source | ogg-demuxer | vorbis-decoder | converter | alsa-output */
   gst_bin_add_many (GST_BIN (pipeline),
-                    source, encoder, decoder, sink, NULL);
+                    source, encoder, decoder, videoscale, sink, NULL);
 
   gst_element_link (source, encoder);
   gst_element_link_filtered (encoder,decoder,caps);
-  gst_element_link (decoder, sink);
+  gst_element_link (decoder,videoscale);
+  gst_element_link_filtered (videoscale, sink, videoscalecaps);
 
   gst_caps_unref(caps);
+  gst_caps_unref(videoscalecaps);
 
   /* Set the pipeline to "playing" state*/
   g_print ("Now recording:\n");
@@ -144,4 +173,13 @@ int main (int   argc,
   return 0;
 
 
+}
+
+int main (int argc, char *argv[])
+{
+#if defined(__APPLE__) && TARGET_OS_MAC && !TARGET_OS_IPHONE
+  return gst_macos_main ((GstMainFunc) main_main, argc, argv, NULL);
+#else
+  return main_main (argc, argv);
+#endif
 }
