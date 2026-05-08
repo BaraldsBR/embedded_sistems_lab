@@ -25,6 +25,11 @@ int main(int argc, char** argv) {
 		return -1;
 	}
 
+	while (True)
+	{
+		printf("position: %4.d", *((int32_t *)esl_demo_map);
+	}
+
 	close(fd);
 	return 0;
 }
