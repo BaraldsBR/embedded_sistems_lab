@@ -14,19 +14,37 @@ module bus #(
         input  wire [(DATA_WIDTH/8)-1:0] slave_byteenable,
         input  wire        signal_A,
         input  wire        signal_B,
+        input  wire        signal_reset,
 		output wire [LED_WIDTH-1:0]  LED         // user_output.new_signal
 	);
 
     reg         [31:0]          mem;
     wire signed [POS_WIDTH-1:0] pos_out;
 
+    wire debounced_A;
+    wire debounced_B;
+
+    debouncer debouncer_A (
+        .clk(clk),
+        .rst(signal_reset),
+        .signal(signal_A),
+        .debounced(debounced_A)
+    );
+
+    debouncer debouncer_B (
+        .clk(clk),
+        .rst(signal_reset),
+        .signal(signal_B),
+        .debounced(debounced_B)
+    );
+    
     encoder #(
         .POS_WIDTH(POS_WIDTH)
     ) my_ip (
-        .rst(reset),
+        .rst(signal_reset),
         .clk(clk),
-        .signal_A(signal_A),
-        .signal_B(signal_B),
+        .signal_A(debounced_A),
+        .signal_B(debounced_B),
         .pos_out(pos_out) 
     );
 

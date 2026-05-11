@@ -63,6 +63,12 @@ module DE10_NANO_SoC(
 
     //////////// SW //////////
     input    [ 3: 0]    SW
+
+    //////////// ENC //////////
+    input               PITCH_ENC_A
+    input               PITCH_ENC_B
+    input               YAW_ENC_A
+    input               YAW_ENC_B
 );
 
 
@@ -111,9 +117,11 @@ soc_system u0(
                //FPGA IO
                //NOTE: This probalby will have a different name
                .encoder_LED(LED),
-               .encoder_signal_A(SW[0]),
-               .encoder_signal_B(SW[1]),
-					.encoder_signal_reset(SW[3]),
+               .encoder_signal_pitch_A(PITCH_ENC_A),
+               .encoder_signal_pitch_B(PITCH_ENC_B),
+               .encoder_signal_yaw_A(YAW_ENC_A),
+               .encoder_signal_yaw_B(YAW_ENC_B),
+               .encoder_signal_reset(SW[3]),
                .hps_0_h2f_reset_reset_n(hps_fpga_reset_n)                   //                hps_0_h2f_reset.reset_n
 
            );
