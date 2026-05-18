@@ -118,7 +118,7 @@ soc_system u0(
                .memory_oct_rzqin(HPS_DDR3_RZQ),                             //                               .oct_rzqin
                //FPGA IO
                //NOTE: This probalby will have a different name
-               .pwm_LED(LED)
+               .pwm_LED(LED),
                .pwm_signal_pitch_dir_A(PITCH_DIRA),
                .pwm_signal_pitch_dir_B(PITCH_DIRB),
                .pwm_signal_pitch_pwm_val(PITCH_PWM_VAL),

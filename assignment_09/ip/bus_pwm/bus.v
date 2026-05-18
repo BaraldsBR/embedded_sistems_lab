@@ -24,14 +24,14 @@ module bus #(
     reg  [31:0] mem;
     wire [15:0] target_pitch = mem[15:0];
     wire [15:0] target_yaw = mem[31:16];
-    assign LED = {signal_pitch_dir_A, signal_pitch_dir_B, 4'b0, signal_yaw_dir_A, signal_yaw_dir_B}
+    assign LED = {signal_pitch_dir_A, signal_pitch_dir_B, 4'b0, signal_yaw_dir_A, signal_yaw_dir_B};
 
     pwm pitch_pwm (
         .rst(signal_reset),
         .clk(clk),
         .target_value(target_pitch),
-        .DIR_A(signal_pitch_dir_A),
-        .DIR_B(signal_pitch_dir_B),
+        .dir_A(signal_pitch_dir_A),
+        .dir_B(signal_pitch_dir_B),
         .PWM_VAL(signal_pitch_pwm_val)
     );
     
@@ -39,8 +39,8 @@ module bus #(
         .rst(signal_reset),
         .clk(clk),
         .target_value(target_yaw),
-        .DIR_A(signal_yaw_dir_A),
-        .DIR_B(signal_yaw_dir_B),
+        .dir_A(signal_yaw_dir_A),
+        .dir_B(signal_yaw_dir_B),
         .PWM_VAL(signal_yaw_pwm_val)
     );
 

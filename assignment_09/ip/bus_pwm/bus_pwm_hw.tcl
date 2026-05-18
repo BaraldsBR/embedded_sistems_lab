@@ -118,12 +118,6 @@ add_interface_port s0 slave_writedata writedata Input -1
 
 add_interface user_interface conduit end
 add_interface_port user_interface LED export Output 1
-add_interface_port user_interface signal_pitch_A export Input 1
-add_interface_port user_interface signal_pitch_B export Input 1
-add_interface_port user_interface signal_yaw_A export Input 1
-add_interface_port user_interface signal_yaw_B export Input 1
-add_interface_port user_interface signal_reset export Input 1
-
 add_interface_port user_interface signal_reset export Input 1
 add_interface_port user_interface signal_pitch_dir_A export Output 1
 add_interface_port user_interface signal_pitch_dir_B export Output 1
