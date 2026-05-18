@@ -9,8 +9,8 @@
 #include "soc_system.h"
 
 typedef struct _bus_content_t {
-  int16_t pitch;
   int16_t yaw;
+  int16_t pitch;
 } bus_content_t;
 
 int main(int argc, char** argv) {
@@ -31,7 +31,7 @@ int main(int argc, char** argv) {
 
 	while (1)
 	{
-		bus_content_t bus_content = *((_bus_content_t *)encoder_bus_map) 
+		bus_content_t bus_content = *((bus_content_t *)encoder_bus_map);
 		printf("pitch: %4.d, yaw: %4.d\n", bus_content.pitch, bus_content.yaw);
 		sleep(1);
 	}
