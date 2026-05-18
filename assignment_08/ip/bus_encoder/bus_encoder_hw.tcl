@@ -77,11 +77,11 @@ set_parameter_property POS_WIDTH GROUP "Encoder Properties"
 set_parameter_property POS_WIDTH AFFECTS_PORT_WIDTHS true
 set_parameter_property POS_WIDTH ALLOWED_RANGES {8 16}
 
-add_parameter POS_WIDTH int 16 "Debounce Cycles"
-set_parameter_property POS_WIDTH DISPLAY_NAME "Debounce Cycles"
-set_parameter_property POS_WIDTH GROUP "Encoder Properties"
-set_parameter_property POS_WIDTH AFFECTS_PORT_WIDTHS true
-set_parameter_property POS_WIDTH ALLOWED_RANGES {50 100 250 500 1000}
+add_parameter DEBOUNCE_CYCLES int 16 "Debounce Cycles"
+set_parameter_property DEBOUNCE_CYCLES DISPLAY_NAME "Debounce Cycles"
+set_parameter_property DEBOUNCE_CYCLES GROUP "Encoder Properties"
+set_parameter_property DEBOUNCE_CYCLES AFFECTS_PORT_WIDTHS true
+set_parameter_property DEBOUNCE_CYCLES ALLOWED_RANGES {50 100 250 500 1000}
 
 ## 
 ## Interface
