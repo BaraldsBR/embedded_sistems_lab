@@ -19,14 +19,14 @@
 ## 
 ## IP details
 ##  
-set_module_property DESCRIPTION "PWM Adapter"
-set_module_property NAME pwm_adapter
+set_module_property DESCRIPTION "Encoder Adapter"
+set_module_property NAME controller_adapter
 set_module_property VERSION 1.0
 set_module_property GROUP Templates
 set_module_property AUTHOR Moll
-set_module_property DISPLAY_NAME pwm_adapter
-set_module_property TOP_LEVEL_HDL_FILE pwm_adapter.v
-set_module_property TOP_LEVEL_HDL_MODULE pwm_adapter
+set_module_property DISPLAY_NAME controller_adapter
+set_module_property TOP_LEVEL_HDL_FILE controller_adapter.v
+set_module_property TOP_LEVEL_HDL_MODULE controller_adapter
 set_module_property INSTANTIATE_IN_SYSTEM_MODULE true
 set_module_property EDITABLE false
 set_module_property SIMULATION_MODEL_IN_VERILOG false
@@ -47,7 +47,9 @@ set_module_property VALIDATION_CALLBACK validate_me
 ## Files
 ## - List all files required by the IP
 ##  
-add_file pwm_adapter.v {SYNTHESIS SIMULATION}
+add_file controller_adapter.v {SYNTHESIS SIMULATION}
+add_file encoder.v {SYNTHESIS SIMULATION}
+add_file debouncer.v {SYNTHESIS SIMULATION}
 add_file pwm.v {SYNTHESIS SIMULATION}
 
 ## 
@@ -63,6 +65,18 @@ set_parameter_property DATA_WIDTH DISPLAY_NAME "Word Size"
 set_parameter_property DATA_WIDTH GROUP "Register File Properties"
 set_parameter_property DATA_WIDTH AFFECTS_PORT_WIDTHS true
 set_parameter_property DATA_WIDTH ALLOWED_RANGES {8 16 32}
+
+add_parameter POS_WIDTH int 16 "Output width"
+set_parameter_property POS_WIDTH DISPLAY_NAME "Output width"
+set_parameter_property POS_WIDTH GROUP "Encoder Properties"
+set_parameter_property POS_WIDTH AFFECTS_PORT_WIDTHS true
+set_parameter_property POS_WIDTH ALLOWED_RANGES {8 16}
+
+add_parameter DEBOUNCE_CYCLES int 1000 "Debounce Cycles"
+set_parameter_property DEBOUNCE_CYCLES DISPLAY_NAME "Debounce Cycles"
+set_parameter_property DEBOUNCE_CYCLES GROUP "Encoder Properties"
+set_parameter_property DEBOUNCE_CYCLES AFFECTS_PORT_WIDTHS true
+set_parameter_property DEBOUNCE_CYCLES ALLOWED_RANGES {50 100 250 500 1000}
 
 ## 
 ## Interface
@@ -111,7 +125,12 @@ add_interface_port s0 slave_writedata writedata Input -1
 ##
 
 add_interface user_interface conduit end
-add_interface_port user_interface signal_reset export Input 1
+
+add_interface_port user_interface signal_pitch_enc_A export Input 1
+add_interface_port user_interface signal_pitch_enc_B export Input 1
+add_interface_port user_interface signal_yaw_enc_A export Input 1
+add_interface_port user_interface signal_yaw_enc_B export Input 1
+
 add_interface_port user_interface signal_pitch_dir_A export Output 1
 add_interface_port user_interface signal_pitch_dir_B export Output 1
 add_interface_port user_interface signal_pitch_pwm_val export Output 1
@@ -119,7 +138,7 @@ add_interface_port user_interface signal_yaw_dir_A export Output 1
 add_interface_port user_interface signal_yaw_dir_B export Output 1
 add_interface_port user_interface signal_yaw_pwm_val export Output 1
 
-
+add_interface_port user_interface signal_reset export Input 1
 
 ##
 ## - Validation/ elaboration functions
@@ -130,6 +149,7 @@ proc validate_me {} {
 proc elaborate_me {}  {
   ## Retrieve the parameters from the wizard
   set the_data_width [get_parameter_value DATA_WIDTH]
+  
   ## Set data width for the avalon interface
   set_port_property slave_readdata  WIDTH $the_data_width
   set_port_property slave_writedata WIDTH $the_data_width

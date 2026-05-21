@@ -12,14 +12,41 @@ module encoder_adapter #(
 		input  wire        clk,          //       clock.clk
 		input  wire        reset,        //       reset.reset
         input  wire [(DATA_WIDTH/8)-1:0] slave_byteenable,
-        input  wire        signal_pitch_A,
-        input  wire        signal_pitch_B,
-        input  wire        signal_yaw_A,
-        input  wire        signal_yaw_B,
+        input  wire        signal_pitch_enc_A,
+        input  wire        signal_pitch_enc_B,
+        input  wire        signal_yaw_enc_A,
+        input  wire        signal_yaw_enc_B,
+        output wire        signal_pitch_dir_A,
+        output wire        signal_pitch_dir_B,
+        output wire        signal_pitch_pwm_val,
+        output wire        signal_yaw_dir_A,
+        output wire        signal_yaw_dir_B,
+        output wire        signal_yaw_pwm_val,
         input  wire        signal_reset
 	);
 
-    reg         [31:0]          mem;
+    reg  [31:0] mem;
+    wire [15:0] target_pitch = mem[31:16];
+    wire [15:0] target_yaw = mem[15:0];
+
+    pwm pitch_pwm (
+        .rst(signal_reset),
+        .clk(clk),
+        .target_value(target_pitch),
+        .dir_A(signal_pitch_dir_A),
+        .dir_B(signal_pitch_dir_B),
+        .PWM_VAL(signal_pitch_pwm_val)
+    );
+    
+    pwm yaw_pwm (
+        .rst(signal_reset),
+        .clk(clk),
+        .target_value(target_yaw),
+        .dir_A(signal_yaw_dir_A),
+        .dir_B(signal_yaw_dir_B),
+        .PWM_VAL(signal_yaw_pwm_val)
+    );
+
     wire signed [POS_WIDTH-1:0] pitch_out;
     wire signed [POS_WIDTH-1:0] yaw_out;
 
