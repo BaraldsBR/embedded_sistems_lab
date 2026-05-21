@@ -84,8 +84,6 @@ module encoder_adapter #(
         .pos_out(yaw_out) 
     );
 
-    assign LED = { pitch_out[3:0], yaw_out[3:0] };
-
     always @(posedge clk or posedge reset) begin
         if (reset) begin
             mem <= 32'b0;

@@ -118,18 +118,18 @@ soc_system u0(
                .memory_oct_rzqin(HPS_DDR3_RZQ),                             //                               .oct_rzqin
                //FPGA IO
                //NOTE: This probalby will have a different name
-               .encoder_signal_pitch_A(PITCH_ENC_A),
-               .encoder_signal_pitch_B(PITCH_ENC_B),
-               .encoder_signal_yaw_A(YAW_ENC_A),
-               .encoder_signal_yaw_B(YAW_ENC_B),
-               .encoder_signal_reset(SW[3]),
-               .pwm_signal_pitch_dir_A(PITCH_DIRA),
-               .pwm_signal_pitch_dir_B(PITCH_DIRB),
-               .pwm_signal_pitch_pwm_val(PITCH_PWM_VAL),
-               .pwm_signal_yaw_dir_A(YAW_DIRA),
-               .pwm_signal_yaw_dir_B(YAW_DIRB),
-               .pwm_signal_yaw_pwm_val(YAW_PWM_VAL),
-               .pwm_signal_reset(SW[3]),
+               .encoder_pitch_A(PITCH_ENC_A),
+               .encoder_pitch_B(PITCH_ENC_B),
+               .encoder_yaw_A(YAW_ENC_A),
+               .encoder_yaw_B(YAW_ENC_B),
+               .encoder_reset(SW[3]),
+               .pwm_pitch_dir_A(PITCH_DIRA),
+               .pwm_pitch_dir_B(PITCH_DIRB),
+               .pwm_pitch_pwm_val(PITCH_PWM_VAL),
+               .pwm_yaw_dir_A(YAW_DIRA),
+               .pwm_yaw_dir_B(YAW_DIRB),
+               .pwm_yaw_pwm_val(YAW_PWM_VAL),
+               .pwm_reset(SW[3]),
                .hps_0_h2f_reset_reset_n(hps_fpga_reset_n)                   //                hps_0_h2f_reset.reset_n
 
            );
