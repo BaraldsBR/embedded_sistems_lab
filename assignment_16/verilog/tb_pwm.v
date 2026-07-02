@@ -1,7 +1,10 @@
-`include "pwm.v" // Include YOUR entity.
-`timescale 1ns / 1ps  // Time unit = period, precision
+`include "pwm.v"
+`timescale 1ns / 1ps
 module tb_pwm;
-  
+  localparam PWM_MAX = 100;
+  localparam LOW_VALUE = 10;
+  localparam HIGH_VALUE = 80;
+
   reg rst;
   reg clk;
   reg [15:0] target_value;
@@ -10,8 +13,8 @@ module tb_pwm;
   wire PWM_VAL;
 
   pwm #(
-    .PWM_CYCLE_LENGTH(100)
-  ) dut ( // <- TopEntity dut (Device Under Test) UPDATE TopEntity when relevant!
+    .PWM_MAX(PWM_MAX)
+  ) dut (
     .rst(rst),
     .clk(clk),
     .target_value(target_value),
@@ -20,7 +23,7 @@ module tb_pwm;
     .PWM_VAL(PWM_VAL)
   );
 
-  // generate input signals
+  // generate clock
   initial begin
     forever begin
       clk = 0;
@@ -30,11 +33,9 @@ module tb_pwm;
     end
   end
 
-
-// Start of your testbench script
   initial begin
-    $dumpfile("signals.vcd");  // Name of the signal dump file
-    $dumpvars(0, tb_pwm);  // Signals to dump
+    $dumpfile("signals.vcd");
+    $dumpvars(0, tb_pwm);
 
     target_value = 0;
     rst = 0;
@@ -43,15 +44,16 @@ module tb_pwm;
     #10;
     rst = 0; 
     #200;
-    target_value = 20;
+
+    target_value = LOW_VALUE;
     #400;
-    target_value = 80;
+    target_value = HIGH_VALUE;
     #400;
-    target_value = -20;
+    target_value = -LOW_VALUE;
     #400;
-    target_value = -80;
-  #400;
+    target_value = -HIGH_VALUE;
+    #400;
     
-    $finish;  // end simulation
+    $finish;
   end
 endmodule
