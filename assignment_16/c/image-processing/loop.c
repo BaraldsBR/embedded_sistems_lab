@@ -31,14 +31,10 @@ static GstFlowReturn new_sample (GstElement *sink) {
   double curr_pitch = controller_in.pitch_current_position;
   double curr_yaw = controller_in.yaw_current_position;
 
-  printf("\n");
-  printf("Current pitch,yaw: %f, %f\n", curr_pitch, curr_yaw);
-
   /* Retrieve the buffer */
   g_signal_emit_by_name (sink, "pull-sample", &sample);
 
   if (sample) {
-    printf("New frame received\n");
     buffer_in = gst_sample_get_buffer (sample);
     packed_image = (yuyv_packet_t*) g_malloc(sizeof(yuyv_packet_t) * IMAGE_WIDTH * IMAGE_HEIGHT / 2);
 
@@ -88,8 +84,6 @@ static GstFlowReturn new_sample (GstElement *sink) {
       }
     }
 #endif
-    printf("Mass: %u pixels (%.4f)\n", mass, (double)mass/(IMAGE_HEIGHT*IMAGE_WIDTH));
-    printf("Ball pos (ver,hor): %u, %u pixel\n", vertical_center, horizontal_center);
 
     double pitch_diff = PI/180 * linMap(vertical_center, 
                                         0, IMAGE_HEIGHT, 
@@ -99,8 +93,6 @@ static GstFlowReturn new_sample (GstElement *sink) {
                                         0, IMAGE_WIDTH, 
                                         FOV_H/2, -FOV_H/2);
 
-    printf("Pos diff (pitch,yaw): %.4f, %.4f rad\n", pitch_diff, yaw_diff);
-    
     double new_target_pitch = curr_pitch + pitch_diff;
     double new_target_yaw = curr_yaw + yaw_diff;
     
@@ -108,8 +100,6 @@ static GstFlowReturn new_sample (GstElement *sink) {
       new_target_pitch = controller_in.pitch_target_position;
       new_target_yaw = controller_in.yaw_target_position;
     }
-
-    printf("Target pos (pitch,yaw): %.4f, %.4f rad\n", new_target_pitch, new_target_yaw);
 
     controller_in.pitch_target_position = new_target_pitch;
     controller_in.yaw_target_position = new_target_yaw;
@@ -136,7 +126,6 @@ static GstFlowReturn new_sample (GstElement *sink) {
     }
 #endif
 
-    printf("horizontal center: %u, vertical center: %u", horizontal_center, vertical_center);
     gst_sample_unref (sample);
     return GST_FLOW_OK;
   }
