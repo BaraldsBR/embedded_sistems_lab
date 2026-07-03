@@ -29,3 +29,14 @@ export PATH=/Library/Frameworks/GStreamer.framework/Versions/1.0/bin:$PATH
 
 ## Compiling 
 gcc $(find . -name '*.c') -lm $(pkg-config --cflags --libs gstreamer-1.0 gstreamer-app-1.0)
+
+## Synthesising verilog
+yosys -p 'synth_ice40 -top TopEntity -json ice40.json' TopEntity.v
+nextpnr-ice40 --hx8k --json ice40.json --pcf ico-jiwy.pcf --asc ice40.asc
+icepack ice40.asc ice40.bin
+
+## Uploading veriolog
+sudo modprobe spi-bcm2835 -r
+./icoprog -R
+./icoprog -p < ice40.bin
+sudo modprobe spi-bcm2835
