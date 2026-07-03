@@ -16,8 +16,6 @@ typedef struct _pos_rad {
 int spiOpen(unsigned spiChan, unsigned spiBaud, unsigned spiFlags);
 int spiClose(int fd);
 
-int spiRead(int fd, unsigned speed, char *buf, unsigned count);
-int spiWrite(int fd, unsigned speed, void *buf, unsigned count);
 int spiXfer(int fd, unsigned speed, void *txBuf, void *rxBuf, unsigned count);
 
 #endif

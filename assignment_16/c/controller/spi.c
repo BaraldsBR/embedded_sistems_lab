@@ -48,44 +48,6 @@ int spiOpen(unsigned spiChan, unsigned spiBaud, unsigned spiFlags) {
 
 int spiClose(int fd) { return close(fd); }
 
-int spiRead(int fd, unsigned speed, char *buf, unsigned count) {
-  int err;
-  struct spi_ioc_transfer spi;
-
-  memset(&spi, 0, sizeof(spi));
-
-  spi.tx_buf = (unsigned long)NULL;
-  spi.rx_buf = (unsigned long)buf;
-  spi.len = count;
-  spi.speed_hz = speed;
-  spi.delay_usecs = 0;
-  spi.bits_per_word = 8;
-  spi.cs_change = 0;
-
-  err = ioctl(fd, SPI_IOC_MESSAGE(1), &spi);
-
-  return err;
-}
-
-int spiWrite(int fd, unsigned speed, void *buf, unsigned count) {
-  int err;
-  struct spi_ioc_transfer spi;
-
-  memset(&spi, 0, sizeof(spi));
-
-  spi.tx_buf = (unsigned long)buf;
-  spi.rx_buf = (unsigned long)NULL;
-  spi.len = count;
-  spi.speed_hz = speed;
-  spi.delay_usecs = 0;
-  spi.bits_per_word = 8;
-  spi.cs_change = 0;
-
-  err = ioctl(fd, SPI_IOC_MESSAGE(1), &spi);
-
-  return err;
-}
-
 int spiXfer(int fd, unsigned speed, void *txBuf, void *rxBuf, unsigned count) {
   int err;
   struct spi_ioc_transfer spi;
