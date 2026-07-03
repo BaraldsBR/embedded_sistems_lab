@@ -4,7 +4,7 @@ module pwm #(
   parameter PWM_CYCLE_LENGTH = 5000,
 
   // Hardcoded 25% pwm safety limit
-  parameter PWM_MAX = PWM_CYCLE_LENGTH * 0.25
+  parameter PWM_MAX = PWM_CYCLE_LENGTH * 25/100
 ) (
   input rst,
   input clk,
@@ -15,10 +15,10 @@ module pwm #(
   output PWM_VAL
 );
   reg  [15:0] counted_cycles;
-  wire        target_zero = (target_value == 16'b0);
-  wire        target_sign = target_value[15];
-  wire [15:0] abs_target = (target_sign) ? (-target_value) : target_value;
-  wire [15:0] capped_target = (abs_target > PWM_MAX) ? PWM_MAX : abs_target;
+  wire        target_zero   = (target_value == 16'b0);
+  wire        target_sign   = target_value[15];
+  wire [15:0] abs_target    = (target_sign) ? (-target_value) : (target_value);
+  wire [15:0] capped_target = (abs_target > PWM_MAX) ? (PWM_MAX) : (abs_target);
 
   always @(posedge clk) begin
     if(rst) begin
@@ -30,6 +30,6 @@ module pwm #(
   end
 
   assign PWM_VAL = (counted_cycles < capped_target);
-  assign dir_A = (target_zero) ? 0 : ~target_sign;
-  assign dir_B = (target_zero) ? 0 : target_sign;
+  assign dir_A = (target_zero) ? (0) : (~target_sign);
+  assign dir_B = (target_zero) ? (0) : (target_sign);
 endmodule
