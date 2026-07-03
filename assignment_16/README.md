@@ -20,6 +20,10 @@ cd icoprog
 g++ src/icoprog.cpp src/gpio_interface.cpp -o icoprog -lgpiodcxx
 ```
 
+### Turn on SPI Interface
+
+> Use the GUI on `raspi-config` to turn on the SPI interface of the RPi
+
 ## Verilog FPGA
 
 ### Synthesising verilog
